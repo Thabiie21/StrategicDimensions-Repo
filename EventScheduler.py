@@ -31,10 +31,14 @@ def list_events():
         print("No events found.")
         return
     
-    # Sort events by date and time
+    print("List of Events: ")
+    for event in sorted(events, key=lambda x: (x['date'], x['time'])):
+        print(f"Title: {event['title']}, Description: {event['description']}, Date: {event['date']}, Time: {event['time']}")
+
+# Sort events by date and time
     sorted_events = sorted(events, key=lambda x: (x['date'], x['time']))
     
-    # Display all events
+# Display all events
     for event in sorted_events:
         print(f"Title: {event['title']}")
         print(f"Description: {event['description']}")
@@ -55,14 +59,43 @@ def delete_event(title):
     else:
         print(f"No event found with title '{title}'.")
 
+# Function to search an event 
+def search_events(keyword):
+    found_events = []
+    if keyword.lower() in event['title'].lower() or keyword.lower() in event['description'].lower() or keyword == event['date']:
+        found_events.append(event)
+    if not found_events:
+        print("No events found matching the search.")
+        return 
+    print("Matching Events Found: ")
+    for event in found_events: 
+            print(f"Title: {event['title']}, Description: {event['description']}, Date: {event['date']}, Time: {event['time']}")
+
+# Function to edit an event
+def edit_event(title):
+     for event in events:
+            if event['title'] == title:
+                print("Enter new event details:")
+                new_title = input("New title: ")
+                new_description = input("New description: ")
+                new_date = input("New date (YYYY-MM-DD): ")
+                new_time = input("New time (HH:MM): ")
+                event.update({"title": new_title, "description": new_description, "date": new_date, "time": new_time})
+                print(f"Event '{title}' edited successfully.")
+                return
+            else:
+                print(f"Event '{title}' not found.")
+
 # Main function to run the application
 def main():
     while True:
         print("\nWelcome to Event Scheduler!")
         print("1. Add Event")
         print("2. List Events")
-        print("3. Delete Event")
-        print("4. Exit")
+        print("3. Search Event")
+        print("4. Edit Event")
+        print("5. Delete Event")
+        print("6. Exit")
         
         choice = input("Enter your choice: ")
         
@@ -73,15 +106,22 @@ def main():
             time = input("Enter event time (HH:MM): ")
             add_event(title, description, date, time)
         elif choice == '2':
-            list_events()
+            list_events() 
         elif choice == '3':
+            keyword = input("Enter keyword to search events: ")
+            search_events(keyword)
+        elif choice == '4':
+            title = input("Enter title of event to edit: ")
+            edit_event(title)
+        elif choice == '5':
             title = input("Enter title of event to delete: ")
             delete_event(title)
-        elif choice == '4':
+        elif choice == '6':
             print("Thank you for using Event Scheduler. Goodbye!")
             break
         else:
             print("Invalid choice. Please try again.")
+       
 
 if __name__ == "__main__":
     main()
